@@ -1,6 +1,7 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -13,13 +14,17 @@ public class GameManager : MonoBehaviour
     [SerializeField] PlayerController player1Script;
     [SerializeField] PlayerController player2Script;
 
-    public GameObject player1;
-    public GameObject player2;
+    [SerializeField] GameObject gameOverPanel;
+    [SerializeField] TMP_Text gameOverText;
+    public int winningScore = 1;
+    bool isGameOver=false;
+
+    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         ball.GoalScored += UpdateScore;//subscribing to event
-        
+        gameOverPanel.SetActive(false);
     }
 
     // Update is called once per frame
@@ -29,25 +34,35 @@ public class GameManager : MonoBehaviour
     }
     private void UpdateScore(int player)
     {
-        switch (player)
+        ResetPlayer(player1Script);
+        ResetPlayer(player2Script);
+
+        
+        if (player == 1)
         {
-            case 1:
-                scoreP1++;
-                uiP1.text = scoreP1.ToString();
-                StartCoroutine(ResetBall(0));
-                ResetPlayer(player1, player1Script);
-                ResetPlayer(player2, player2Script);
-                break;
-            case 2:
-                scoreP2++;
-                uiP2.text = scoreP2.ToString();
-                StartCoroutine(ResetBall(0));
-                ResetPlayer(player1, player1Script);
-                ResetPlayer(player2, player2Script);
-                break;
+            scoreP1++;
+            uiP1.text=scoreP1.ToString();
+            if(scoreP1 >= winningScore)
+            {
+                isGameOver=true;
+                GameOver(1);
+            }
+            else { StartCoroutine(ResetBall(0)); }
+        }
+        else
+        {
+            scoreP2++;
+            uiP2.text = scoreP2.ToString();
+            if (scoreP2 == winningScore)
+            {
+                isGameOver = true;
+                GameOver(2);
+            }else { StartCoroutine(ResetBall(0)); }
+        }
+        
             
 
-        }
+        
     }
     private IEnumerator ResetBall(int player)
     {
@@ -57,10 +72,21 @@ public class GameManager : MonoBehaviour
         ball.Serve();//calling serve from ballmovement
         ball.isAllowedToMove = true;
     }
-    private void ResetPlayer(GameObject player,PlayerController playerScript)
+    private  void ResetPlayer(PlayerController playerScript)
     {
-        player.transform.position = playerScript.initialPlayerPosition;
+        playerScript.transform.position = playerScript.initialPlayerPosition;
     }
-    
+    void GameOver(int playerNo)
+    {
+        gameOverPanel.SetActive(true);
+        ball.isAllowedToMove=false;
+        gameOverText.text="Player " + playerNo.ToString() + " Wins";
+
+    }
+    public void RestartGame()
+    {
+       
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
    
 }
