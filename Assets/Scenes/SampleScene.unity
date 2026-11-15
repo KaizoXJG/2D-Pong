@@ -2293,7 +2293,7 @@ MonoBehaviour:
   player2Script: {fileID: 620530563}
   gameOverPanel: {fileID: 1853978799}
   gameOverText: {fileID: 542043377}
-  winningScore: 1
+  winningScore: 3
 --- !u!4 &1624561715
 Transform:
   m_ObjectHideFlags: 0
