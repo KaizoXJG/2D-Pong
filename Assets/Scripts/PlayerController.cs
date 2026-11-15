@@ -1,4 +1,4 @@
-using TMPro;
+
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -8,8 +8,8 @@ public class PlayerController : MonoBehaviour
     public InputAction moveAction;
     public float playerInput;
     public float yRange = 3.75f;
-    [SerializeField] TMP_Text uiP1;
-    [SerializeField] TMP_Text uiP2;
+    public Vector2 initialPlayerPosition;
+ 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
